@@ -2,11 +2,22 @@ from random import randint, choice
 
 __author__ = 'xtofl'
 
-class MasterMind:
+class MasterMind(object):
 
     def __init__(self, random):
-        self.random = random
+        self.secret = MasterMind.make_secret(random)
 
+    @staticmethod
+    def make_secret(source):
+        secret = []
+        it = iter(source)
+        for _ in range(4):
+            n = next(it)
+            while n in secret:
+                n = next(it)
+            secret.append(n)
+
+        return secret
 
     def start(self):
         self.secret = [self.random() for _ in range(4)]
@@ -21,12 +32,25 @@ class MasterMind:
             return (right_place, right_color)
 
 
+
+
+def validate(g):
+    if any(not g in range(1, 9) for g in guess):
+        raise ValueError()
+
+
 if __name__ == "__main__":
-    game = MasterMind(random=lambda: choice(range(8)))
+    game = MasterMind(random=lambda: choice(range(1, 9)))
     game.start()
     for guess_nr in range(8):
-        guess = [int(c) for c in raw_input("guess: ")]
-        print(game.guess(guess))
-        if game.guess(guess) == (4, 0):
-            print("Gewonnen!")
-            break
+        try:
+            guess = [int(c) for c in raw_input("guess: ")]
+            validate(guess)
+            print(game.guess(guess))
+            if game.guess(guess) == (4, 0):
+                print("Gewonnen!")
+                break
+        except ValueError:
+            print("bad input - only digits 12345678 allowed")
+
+    print("lost... the combination was {}".format(game.secret))
