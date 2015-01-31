@@ -1,6 +1,7 @@
-from random import randint, choice
+from random import choice
 
 __author__ = 'xtofl'
+
 
 class MasterMind(object):
 
@@ -19,19 +20,13 @@ class MasterMind(object):
 
         return secret
 
-
     def guess(self, sequence):
-        if sequence == self.secret:
-            return (4, 0)
-        else:
-            right_place = sum(1 for (c, s) in zip(self.secret, sequence) if c == s)
-            right_color = sum(1 for (c, s) in zip(self.secret, sequence) if s in self.secret and c != s)
-            return (right_place, right_color)
+        right_place = sum(1 for (c, s) in zip(self.secret, sequence) if c == s)
+        right_color = sum(1 for (c, s) in zip(self.secret, sequence) if s in self.secret and c != s)
+        return right_place, right_color
 
 
-
-
-def validate(g):
+def validate(guess):
     if any(not g in range(1, 9) for g in guess):
         raise ValueError()
 
@@ -39,6 +34,7 @@ def validate(g):
 def series():
     while True:
         yield choice(range(1, 9))
+
 
 if __name__ == "__main__":
     game = MasterMind(random=series())
@@ -49,7 +45,7 @@ if __name__ == "__main__":
             validate(guess)
             print(game.guess(guess))
             if game.guess(guess) == (4, 0):
-                print("Gewonnen!")
+                print("You win!")
                 break
         except ValueError:
             print("bad input - only digits 12345678 allowed")
