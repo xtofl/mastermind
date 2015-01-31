@@ -19,9 +19,6 @@ class MasterMind(object):
 
         return secret
 
-    def start(self):
-        self.secret = [self.random() for _ in range(4)]
-
 
     def guess(self, sequence):
         if sequence == self.secret:
@@ -39,9 +36,13 @@ def validate(g):
         raise ValueError()
 
 
+def series():
+    while True:
+        yield choice(range(1, 9))
+
 if __name__ == "__main__":
-    game = MasterMind(random=lambda: choice(range(1, 9)))
-    game.start()
+    game = MasterMind(random=series())
+
     for guess_nr in range(8):
         try:
             guess = [int(c) for c in raw_input("guess: ")]
